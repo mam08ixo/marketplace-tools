@@ -8,6 +8,8 @@
 /**
  * validate_m2_package.php - a script that checks a given M2 zip package to ensure
  * it is structured correctly and has all the required files.
+ * 
+ * 
  */
 
 
@@ -61,6 +63,8 @@ main($argc, $argv);
  * @see usage()
  *
  * @see validateM2Zip()
+ *
+ * @SuppressWarnings(PHPMD.ExitExpression)
  *
  */
 function main($argc, $argv)
@@ -242,6 +246,10 @@ function getZipFiles($argv)
  *
  * 200 - Errors detected during the checks. Specific errors are displayed in stderr.
  *
+ * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+ * @SuppressWarnings(PHPMD.NPathComplexity)
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ *
  */
 function validateM2Zip($fname, $debug)
 {
@@ -328,7 +336,6 @@ function validateM2Zip($fname, $debug)
     fwrite(STDERR, "WARNING - \"" . $pkgName . "\": Alternate folder structure is valid but the extension" .
       " will not be manageable through the Component Manager.\n");
   }
-
 
   if( is_array($composerJson) )  {
       // Ensure all the needed fields are present in the 
@@ -523,6 +530,9 @@ function registrationPhpExists($zip, $regPhp)
  * @return boolean True if all validations succeeded, false otherwise.
  *
  * @see validateComposerAutoload()
+ *
+ * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+ * @SuppressWarnings(PHPMD.NPathComplexity)
  *
  */
 function validateComposerJson($pkgName, $composerJson)
