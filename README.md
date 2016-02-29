@@ -1,4 +1,4 @@
-#Marketplace
+#Marketplace tools
 The idea behind this directory is to house standalone tools that developers can use to validate/verify their extensions before submitting them to the Marketplace. Currently, it only houses a package validation tool for Magento 2 Extensions. In the works is a standalone tool that will generate a CodeSniffer report for a given Extension.
 ######validate_m2_package.php
 ```
