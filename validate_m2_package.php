@@ -1,7 +1,7 @@
 #!/usr/bin/php
 <?php
 /**
- * Copyright © 2015 Magento. All rights reserved.
+ * Copyright © 2016 Magento. All rights reserved.
  * See https://github.com/magento/magento2/blob/develop/COPYING.txt for license details.
  */
 
