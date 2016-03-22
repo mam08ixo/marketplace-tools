@@ -600,18 +600,19 @@ function validateComposerJson($pkgName, $composerJson)
     }
   }
 
-  // extra['map'] is deprecated and should not be present anymore.
   if( isset($extra) ) {
+    // extra['map'] is deprecated and should not be present anymore.
     if( isset($extra['map']) ) {
-        fwrite(STDERR, "ERROR - \"" . $pkgName . "\": The \"extra['map']\" field is deprecated; " .
-          "it should not be present anymore.\n");
-        $res = false;
+      fwrite(STDERR, "ERROR - \"" . $pkgName . "\": The \"extra['map']\" field is deprecated; " .
+        "it should not be present anymore.\n");
+      $res = false;
     }
 
+    // extra['magento-root-dir'] is deprecated and should not be present anymore.
     if( isset($extra['magento-root-dir']) ) {
-        fwrite(STDERR, "ERROR - \"" . $pkgName . "\": The \"extra['magento-root-dir'] field is deprecated; " .
-          "it should not be present anymore.\n");
-        $res = false;
+      fwrite(STDERR, "ERROR - \"" . $pkgName . "\": The \"extra['magento-root-dir'] field is deprecated; " .
+        "it should not be present anymore.\n");
+      $res = false;
     }
   }
 
