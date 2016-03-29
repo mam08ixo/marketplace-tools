@@ -333,8 +333,7 @@ function validateM2Zip($fname, $debug)
   // Attempt to find the source folder if it exists
   $srcDir = findSourceFolder($composerJson);
   if($srcDir !== "") {
-    fwrite(STDERR, "WARNING - \"" . $pkgName . "\": Alternate folder structure is valid but the extension" .
-      " will not be manageable through the Component Manager.\n");
+    fwrite(STDERR, "ERROR - \"" . $pkgName . "\": Alternate folder structure is currently not supported\n");
   }
 
   if( is_array($composerJson) )  {
