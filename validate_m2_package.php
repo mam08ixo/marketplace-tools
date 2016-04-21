@@ -576,8 +576,9 @@ function validateComposerJson($pkgName, $composerJson)
 
     ) {
     fwrite(STDERR, "ERROR - \"" . $pkgName . "\": The 'version' field in \"composer.json\" " .
-      "is missing or empty. The 'version' field is required and needs to be of the following form " .
-      "as decribed here: https://getcomposer.org/doc/04-schema.md#version .\n");
+      "is missing, empty or not in expected format. The 'version' field is required and needs " . 
+      "to be of the following form as described here: " . 
+      "https://getcomposer.org/doc/04-schema.md#version .\n");
     $res = false;
   }
 
