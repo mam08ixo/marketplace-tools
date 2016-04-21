@@ -570,14 +570,14 @@ function validateComposerJson($pkgName, $composerJson)
   }
 
   // version
-  // Format: <major number>.<minor number>.<patch>
-  //        <major number>.<minor number>.<patch>-<stability>
-  if( !preg_match("/^([0-9])+\.([0-9])+\.([0-9])+$/i", $version) &&
-      !preg_match("/^([0-9])+\.([0-9])+\.([0-9])+-([a-z0-9])+$/i", $version)
+  // Expected format as per https://getcomposer.org/doc/04-schema.md#version
+  if( !preg_match("/^(|v)([0-9])+\.([0-9])+\.([0-9])+" .
+        "(-(patch|p|dev|a|alpha|b|beta|rc)([0-9])*)?$/i", $version)
+
     ) {
     fwrite(STDERR, "ERROR - \"" . $pkgName . "\": The 'version' field in \"composer.json\" " .
-      "is missing or empty. The 'version' field is required and needs to be of the following form: " .
-      "<major number>.<minor number>.<patch> OR <major number>.<minor number>.<patch>-<stability>.\n");
+      "is missing or empty. The 'version' field is required and needs to be of the following form " .
+      "as decribed here: https://getcomposer.org/doc/04-schema.md#version .\n");
     $res = false;
   }
 
