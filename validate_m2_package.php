@@ -47,6 +47,17 @@ $g_moduleTypes = array(
                         'magento2-language' => true
                       );
 
+/**
+ * @global array List of Magento components or modules that an Extension developer must not depend on
+ *               in the composer.json. The value here is not used.
+ *
+ */
+$g_invalidDependencies = array(
+                                'magento/magento2-base' => true,
+                                'magento/product-community-edition' => true,
+                                'magento/product-enterprise-edition' => true
+                              );
+
 main($argc, $argv);
 
 /**
@@ -334,6 +345,7 @@ function validateM2Zip($fname, $debug)
   $srcDir = findSourceFolder($composerJson);
   if($srcDir !== "") {
     fwrite(STDERR, "ERROR - \"" . $pkgName . "\": Alternate folder structure is currently not supported\n");
+    $err = true;
   }
 
   if( is_array($composerJson) )  {
@@ -444,8 +456,9 @@ function findSourceFolder($composerJson)
 
   if(is_null($srcFolder)) {
     $pathParts = pathinfo(@current(@$composerJson['autoload']['files']));
+    $dirname = @$pathParts['dirname'];
 
-    if(is_null(@$pathParts['dirname'])) {
+    if(is_null($dirname) || ($dirname === '.')) {
       return '';
     }
 
@@ -542,6 +555,7 @@ function validateComposerJson($pkgName, $composerJson)
   $type = (string) @$composerJson['type'];
   $version = (string) @$composerJson['version'];
   $autoload = @$composerJson['autoload'];
+  $require = @$composerJson['require'];
   $extra = @$composerJson['extra'];
   $res = true;
   $knownType = true;
@@ -588,16 +602,9 @@ function validateComposerJson($pkgName, $composerJson)
       $res = false;
     }
   }
-  else if($type == 'metapackage') {
-    // metapackages should have non-empty require directive 
-    $require = @$composerJson['require'];
 
-    if(!is_array($require) || (count($require) <= 0)) {
-      fwrite(STDERR, "ERROR - \"" . $pkgName . "\": The 'require' directive in " .
-        "\"composer.json\" is missing, empty, or incorrect. Please consult the \"Package a component\" section " .
-        "of the PHP Developer Guide for more information.\n");
-      $res = false;
-    }
+  if(!validateComposerDependencies($type, $pkgName, $require)) {
+    $res = false;  
   }
 
   if( isset($extra) ) {
@@ -675,6 +682,54 @@ function validateComposerAutoload($type, $pkgName, $autoload)
     fwrite(STDERR, "ERROR - \"" . $pkgName . "\": The 'autoload' directive is missing or not " .
       "set up correctly. Please consult the \"Component registration\" section of the PHP Developer Guide for more " .
       "information.\n");
+    $res = false;
+  }
+
+  return $res;
+}
+
+/**
+ * Helper function to validate composer.json require field value.
+ *
+ * It ensures that invalid packages and/or dependencies are not specified.
+ *
+ * Any errors detected here are reported to the stdout.
+ *
+ * @param string $type The module type from the composer.json 'type' field.
+ * @param string $pkgName Name of the supplied zip file.
+ * @param array $require List of dependencies specified in require field from composer.json.
+ *
+ * @return boolean True if all validations succeeded, false otherwise.
+ *
+ */
+function validateComposerDependencies($type, $pkgName, $require)
+{
+  global $g_invalidDependencies;
+  $res = true;
+
+  if(is_array($require) && (count($require) > 0)) {
+    foreach($require as $package => $version) {
+      if(isset($g_invalidDependencies[$package])) {
+        fwrite(STDERR, "ERROR - \"" . $pkgName . "\": The '$package' package must not be specified as a dependency.\n");
+        $res = false;
+      }
+      else if(preg_match("/^magento\//", $package) && ($version === '*')) {
+        fwrite(STDERR, "ERROR - \"" . $pkgName . "\": The '$package' must have versions in supported ranges.\n");
+        $res = false;
+      }
+      else if($package === 'php') {
+        fwrite(STDERR, "WARNING - \"" . $pkgName . "\": It is not recommended to specify supported php versions in dependencies. " .  
+          "If specified, it must at least match the php requirements of the supported Magento versions.\n");
+      }
+
+    }
+  }
+  else if($type == 'metapackage') {
+    // metapackages should have non-empty require directive 
+
+    fwrite(STDERR, "ERROR - \"" . $pkgName . "\": The 'require' directive in " .
+      "\"composer.json\" is missing, empty, or incorrect. Please consult the \"Package a component\" section " .
+      "of the PHP Developer Guide for more information.\n");
     $res = false;
   }
 
