@@ -532,7 +532,7 @@ function registrationPhpExists($zip, $regPhp)
  * type
  * version
  * autoload - only for non-metapackages
- * require - only for metapackages
+ * require
  *
  * See comments below for the expected format of the values. Any
  * errors detected here are reported to the stdout.
