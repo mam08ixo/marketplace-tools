@@ -714,7 +714,7 @@ function validateComposerDependencies($type, $pkgName, $require)
         $res = false;
       }
       else if(preg_match("/^magento\//", $package) && ($version === '*')) {
-        fwrite(STDERR, "ERROR - \"" . $pkgName . "\": The '$package' must have versions in supported ranges.\n");
+        fwrite(STDERR, "ERROR - \"" . $pkgName . "\": The '$package' must have specific version(s) as a dependency.\n");
         $res = false;
       }
       else if($package === 'php') {
