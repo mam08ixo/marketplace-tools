@@ -54,6 +54,7 @@ $g_moduleTypes = array(
  */
 $g_invalidDependencies = array(
                                 'magento/magento2-base' => true,
+                                'magento/magento2-ee-base' => true,
                                 'magento/product-community-edition' => true,
                                 'magento/product-enterprise-edition' => true
                               );
